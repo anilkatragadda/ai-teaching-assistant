@@ -1,0 +1,150 @@
+name: CI - Test & Build Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  llm-wiki-validate:
+    name: LLM Wiki & Specs Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate Wiki Taxonomy & Traceability
+        run: python3 scripts/validate_wiki.py
+
+  lint-and-typecheck:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for package.json
+        id: check_node
+        run: |
+          if [ -f "package.json" ]; then
+            echo "has_node=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_node=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_node.outputs.has_node == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.check_node.outputs.has_node == 'true'
+        run: npm ci
+
+      - name: Run Linter
+        if: steps.check_node.outputs.has_node == 'true'
+        run: npm run lint --if-present
+
+      - name: Run Typecheck
+        if: steps.check_node.outputs.has_node == 'true'
+        run: npm run typecheck --if-present
+
+  test:
+    name: Unit, Component & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for Node or Python test configurations
+        id: check_tests
+        run: |
+          if [ -f "package.json" ]; then
+            echo "has_node=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_node=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -f "pyproject.toml" ] || [ -f "requirements.txt" ]; then
+            echo "has_python=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_python=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_tests.outputs.has_node == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        if: steps.check_tests.outputs.has_node == 'true'
+        run: npm ci
+
+      - name: Run Node Tests (Unit, Component, Integration)
+        if: steps.check_tests.outputs.has_node == 'true'
+        run: npm test --if-present -- --coverage
+
+      - name: Setup Python
+        if: steps.check_tests.outputs.has_python == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Python Tests
+        if: steps.check_tests.outputs.has_python == 'true'
+        run: |
+          pip install pytest pytest-cov
+          pytest --cov
+
+      - name: Placeholder test check if no test suites exist yet
+        if: steps.check_tests.outputs.has_node == 'false' && steps.check_tests.outputs.has_python == 'false'
+        run: echo "No application test runner configured yet. Ready for app implementation."
+
+  build:
+    name: Production Build Verification
+    needs: [lint-and-typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for package.json
+        id: check_build
+        run: |
+          if [ -f "package.json" ]; then
+            echo "has_node=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_node=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_build.outputs.has_node == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.check_build.outputs.has_node == 'true'
+        run: npm ci
+
+      - name: Build Application
+        if: steps.check_build.outputs.has_node == 'true'
+        run: npm run build --if-present
+
+      - name: Fallback if no build configured yet
+        if: steps.check_build.outputs.has_node == 'false'
+        run: echo "No build target configured yet. Ready for app implementation."

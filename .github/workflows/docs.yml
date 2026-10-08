@@ -1,0 +1,32 @@
+name: Docs & LLM Wiki Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'AGENTS.md'
+      - 'README.md'
+  workflow_dispatch:
+
+jobs:
+  validate-and-sync-docs:
+    name: Verify & Sync LLM Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate LLM Wiki Integrity
+        run: python3 scripts/validate_wiki.py
+
+      - name: Check for Unregistered Artifacts
+        run: |
+          echo "Verifying docs/INDEX.md catalog..."
+          test -f docs/INDEX.md || exit 1
+          echo "Documentation verification completed."

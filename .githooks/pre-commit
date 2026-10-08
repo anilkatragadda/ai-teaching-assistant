@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+#
+# Pre-Commit Hook for AI Teaching Assistant
+# Automatically runs:
+# 1. Secret & Sensitive File Detection
+# 2. LLM Wiki & Frontmatter Validation
+# 3. Unit, Component, and Integration Tests
+# 4. Linting & Typechecking
+#
+
+set -e
+
+echo "🔍 Running pre-commit verification..."
+
+# -----------------------------------------------------------------------------
+# 1. Secret & Sensitive File Gate
+# -----------------------------------------------------------------------------
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "$STAGED_FILES" ]; then
+  echo "No files staged. Exiting hook."
+  exit 0
+fi
+
+# Check for forbidden sensitive filenames
+FORBIDDEN_PATTERNS=(".env" ".env.local" ".env.production" ".pem" ".key" "id_rsa" "google-services.json")
+for file in $STAGED_FILES; do
+  for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
+    if [[ "$file" == *"$pattern"* && "$file" != *".env.example"* ]]; then
+      echo "❌ ERROR: Attempting to commit sensitive file: $file"
+      echo "   Remove this file from stage using: git reset HEAD $file"
+      exit 1
+    fi
+  done
+done
+
+# Basic regex check for committed API key signatures in staged text
+if git diff --cached -S"AIzaSy" --quiet && git diff --cached -S"ghp_" --quiet; then
+  : # No obvious API keys detected
+else
+  echo "⚠️  WARNING: Potential API key pattern detected in staged changes!"
+  echo "   Please review git diff --cached carefully before committing."
+fi
+
+# -----------------------------------------------------------------------------
+# 2. LLM Wiki & Artifact Taxonomy Gate
+# -----------------------------------------------------------------------------
+HAS_DOC_CHANGES=$(echo "$STAGED_FILES" | grep -E '^docs/' || true)
+if [ -n "$HAS_DOC_CHANGES" ] && [ -f "scripts/validate_wiki.py" ]; then
+  echo "📚 Validating LLM Wiki taxonomy and artifact links..."
+  python3 scripts/validate_wiki.py
+fi
+
+# -----------------------------------------------------------------------------
+# 3. Linters & Typecheckers
+# -----------------------------------------------------------------------------
+if [ -f "package.json" ]; then
+  if grep -q '"lint":' package.json; then
+    echo "🧹 Running linter (npm run lint)..."
+    npm run lint --silent
+  fi
+
+  if grep -q '"typecheck":' package.json; then
+    echo "🔎 Running typecheck (npm run typecheck)..."
+    npm run typecheck --silent
+  fi
+fi
+
+# -----------------------------------------------------------------------------
+# 4. Unit, Component, and Integration Tests Gate
+# -----------------------------------------------------------------------------
+TESTS_RUN=false
+
+# Node / Web Tests
+if [ -f "package.json" ]; then
+  if grep -q '"test":' package.json; then
+    echo "🧪 Running Node tests (Unit, Component, Integration)..."
+    npm test -- --bail
+    TESTS_RUN=true
+  fi
+fi
+
+# Python Tests
+if [ -f "pytest.ini" ] || [ -f "pyproject.toml" ] || [ -d "tests" ]; then
+  if command -v pytest >/dev/null 2>&1; then
+    echo "🧪 Running Python tests (pytest)..."
+    pytest -x -q
+    TESTS_RUN=true
+  fi
+fi
+
+if [ "$TESTS_RUN" = true ]; then
+  echo "✅ All tests passed!"
+fi
+
+echo "✅ Pre-commit checks passed successfully. Proceeding with commit."
+exit 0
