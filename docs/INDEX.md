@@ -12,8 +12,9 @@ Every artifact follows a strict ID namespace and file naming format:
 
 | Prefix | Artifact Type | Standard Directory | Naming Pattern | Downstream Consumer / Agent |
 |---|---|---|---|---|
-| **`IB`** | **Intent Brief** | [`docs/project-plan/intents/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/) | `IB-###-<slug>.md` | `architecture-explorer`, `spec-driven-development` |
+| **`IB`** | **Intent Brief** | [`docs/project-plan/intents/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/) | `IB-###-<slug>.md` | `architecture-explorer`, `ui-ux-designer`, `spec-driven-development` |
 | **`ARN`** | **Architecture Research Note** | [`docs/architecture/research/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | `ARN-###-<slug>.md` | `intent-reviewer`, `documentation-and-adrs` |
+| **`UI`** | **UI/UX Design Spec** | [`docs/architecture/ui/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | `UI-###-<slug>.md` | `ui-ux-designer`, `ui-ux-studio`, `spec-driven-development` |
 | **`PRD`** | **Requirements & Spec** | [`docs/project-plan/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | `PRD-###-<slug>.md` | `api-and-interface-design`, `planning-and-task-breakdown` |
 | **`ADR`** | **Architecture Decision Record** | [`docs/architecture/adrs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | `ADR-###-<slug>.md` | All engineering agents |
 | **`OAS`** | **OpenAPI Service Contract** | [`docs/open-api/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | `OAS-###-<slug>.yaml` | Backend engineers, frontend callers, `test-engineer` |
@@ -63,9 +64,9 @@ Immediately beneath the H1 title of every document, include clickable GitHub-sty
 
 When a new artifact is created or advances through the gates, update this central table:
 
-| Intent (`IB`) | Research Note (`ARN`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Task Plan (`TASK`) | Status |
-|---|---|---|---|---|---|---|
-| *Example:* `IB-001` | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | [`PRD-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | [`OAS-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | [`TASK-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/) | Planned |
+| Intent (`IB`) | Research Note (`ARN`) | UI Design (`UI`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Task Plan (`TASK`) | Status |
+|---|---|---|---|---|---|---|---|
+| *Example:* `IB-001` | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | [`UI-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | [`PRD-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | [`OAS-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | [`TASK-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/) | Planned |
 
 ---
 
