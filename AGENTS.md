@@ -142,3 +142,5 @@ Every artifact must include a visible Section 0 block immediately after the main
 4. **Red Before Green (TDD)**: Every bugfix or new feature must start with a failing test written by or verified by `test-engineer`.
 5. **No Fluent Emptiness (Clarity Standard)**: Documentation and prompts must name exact functions, error states, and measurable bounds. Never invent specifics (`ask-author` when in doubt).
 6. **Student Privacy by Design**: Never log student conversations, tokens, or PII without anonymization; never commit API keys or credentials.
+7. **Agent Communication Standards (ASD-STE100)**: All agents and assistant interactions must adhere to [`.agents/rules/communication.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/rules/communication.md). Code edits must occur via tools without dumping full files into chat. Post-edit messages are limited to $\le 5$ lines (files touched, what changed, how to verify). Never include tutorials or restatements unless explicitly requested.
+
