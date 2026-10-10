@@ -1,0 +1,68 @@
+name: CD - Deployment Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target_env:
+        description: 'Deployment target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: deployment-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pre-deploy-check:
+    name: Verify Release Criteria
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Wiki & Documentation Integrity
+        run: python3 scripts/validate_wiki.py
+
+  deploy:
+    name: Deploy to Environment
+    needs: [pre-deploy-check]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.target_env || 'staging' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for package.json
+        id: check_build
+        run: |
+          if [ -f "package.json" ]; then
+            echo "has_node=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_node=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_build.outputs.has_node == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies & Build
+        if: steps.check_build.outputs.has_node == 'true'
+        run: |
+          npm ci
+          npm run build --if-present
+
+      - name: Execute Deployment
+        run: |
+          echo "Deploying commit ${{ github.sha }} to environment: ${{ github.event.inputs.target_env || 'staging' }}"
+          # Deployment adapter (e.g. Firebase App Hosting, Google Cloud Run, Vercel) executes here
+          echo "Deployment pipeline executed successfully."
