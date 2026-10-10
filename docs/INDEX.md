@@ -68,7 +68,8 @@ When a new artifact is created or advances through the gates, update this centra
 
 | Intent (`IB`) | Research Note (`ARN`) | UI Design (`UI`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Task Plan (`TASK`) | Status |
 |---|---|---|---|---|---|---|---|
-| *Example:* `IB-001` | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | [`UI-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | [`PRD-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | [`OAS-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | [`TASK-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/) | Planned |
+| — | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/ARN-001-competitive-differentiation-and-moat.md) | — | — | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-001-core-tech-stack-and-video-rendering.md) | — | — | Accepted |
+
 
 ---
 
