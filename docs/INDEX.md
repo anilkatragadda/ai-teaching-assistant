@@ -68,7 +68,8 @@ When a new artifact is created or advances through the gates, update this centra
 
 | Intent (`IB`) | Research Note (`ARN`) | UI Design (`UI`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Task Plan (`TASK`) | Status |
 |---|---|---|---|---|---|---|---|
-| — | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/ARN-001-competitive-differentiation-and-moat.md) | — | — | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-001-core-tech-stack-and-video-rendering.md) | — | — | Accepted |
+| — | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/ARN-001-competitive-differentiation-and-moat.md) | — | — | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-001-core-tech-stack-and-video-rendering.md)<br>[`ADR-002`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-002-progressive-deployment-plan.md) | — | — | Accepted |
+
 
 
 ---
