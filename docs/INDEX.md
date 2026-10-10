@@ -4,6 +4,8 @@ Welcome to the **LLM Wiki Knowledge Graph** for the AI Teaching Assistant projec
 
 This repository uses an **Intent-Driven AI-SDLC** where high-level developer intents ("vibe coding") are autonomously transformed into production-ready software across rigorous engineering gates. Every gate produces an explicitly typed, uniquely numbered, bidirectionally linked markdown or schema artifact.
 
+- **System Scope & Vision Anchor:** [`docs/project-plan/SCOPE.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/SCOPE.md) (`SCOPE-001`)
+
 ---
 
 ## 1. Artifact Taxonomy & Naming Conventions
