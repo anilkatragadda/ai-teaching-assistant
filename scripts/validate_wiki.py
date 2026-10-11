@@ -23,6 +23,7 @@ VALID_PREFIXES = {
     "UI": ("docs/architecture/ui", "ui-design-spec"),
     "PRD": ("docs/project-plan/specs", "prd"),
     "ADR": ("docs/architecture/adrs", "adr"),
+    "TECH": ("docs/architecture/specs", "tech-spec"),
     "TASK": ("docs/project-plan/tasks", "task-breakdown"),
     "REL": ("docs/releases", "release-report"),
 }
