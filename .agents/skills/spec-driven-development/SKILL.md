@@ -1,259 +1,209 @@
 ---
 name: spec-driven-development
-description: Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when drafting a PRD or requirements document with objectives and scope, or when requirements are unclear, ambiguous, or only exist as a vague idea. Use when a single requirement spans several independently testable capabilities and needs decomposing into a capability map of modules before specifying.
+description: Authors Technical Specifications and Phased Implementation Plans (TECH-###). Use during Gate 2.5 of the SDLC to translate approved PRDs, ADRs, and OpenAPI contracts into technical scaffolding, exact commands, directory layouts, and milestone to-dos in docs/architecture/specs/ before breaking into atomic tasks.
 ---
 
-# Spec-Driven Development
+# Technical Spec & Phased Implementation Planning (Gate 2.5)
 
 ## Overview
 
-Write a structured specification before writing any code. The spec is the shared source of truth between you and the human engineer — it defines what we're building, why, and how we'll know it's done. Code without a spec is guessing.
+A Product Requirements Document (`PRD-###`) defines *what* to build and *why*.  
+An Architecture Decision Record (`ADR-###`) defines *key trade-offs*.  
+An OpenAPI Contract (`OAS-###`) defines *API schemas*.
 
-## When to Use
+Before jumping straight into code, software engineering requires a **Technical Specification & Implementation Plan (`TECH-###`)**:
+1. **Technical Scaffolding:** Exact build/test commands, file placements, and code style patterns.
+2. **Execution Boundaries:** What the developer/agent may do freely vs. what requires approval.
+3. **Phased Implementation Plan (Milestone To-Dos):** The macro execution roadmap (e.g., Phase 1: DB & Migrations, Phase 2: SymPy Solver Engine, Phase 3: Fastify SSE Stream).
 
-- Starting a new project or feature
-- Requirements are ambiguous or incomplete
-- The change touches multiple files or modules
-- You're about to make an architectural decision
-- The task would take more than 30 minutes to implement
+These milestone to-dos are then converted by `planning-and-task-breakdown` into atomic tasks (`TASK-###`), where each task contains granular checklist to-dos executed via Test-Driven Development (TDD).
 
-**When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
+---
 
-## The Gated Workflow
+## The 3-Level Progression (From Plan to Code)
 
-Spec-driven development has four phases, preceded by a scope check (Phase 0) that activates only when one request bundles several independently testable capabilities. Do not advance to the next phase until the current one is validated.
-
+```text
+Level 1: Milestone To-Dos (TECH-###)
+   │  "Phase 1: Database schemas and seed data"
+   │  "Phase 2: SymPy verification solver service"
+   ▼
+Level 2: Atomic Tasks (TASK-###)
+   │  "TASK-001: Implement SymPy solver subprocess wrapper"
+   │  "TASK-002: Add OCR confidence threshold check"
+   ▼
+Level 3: Execution To-Dos (Within each Task)
+      [ ] 1. Write failing unit test (Red)
+      [ ] 2. Implement core function (Green)
+      [ ] 3. Verify passing suite and lint (Refactor)
 ```
-SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
-   │          │        │          │
-   ▼          ▼        ▼          ▼
- Human      Human    Human      Human
- reviews    reviews  reviews    reviews
-```
 
-### Phase 0: Scope Check
+---
 
-Most requests describe one capability. If this one does, skip this phase and go straight to Specify — Phase 0 exists for the exception, not the rule, and it puts no hierarchy on single-capability features.
+## File Naming & Directory Convention
 
-**Detection.** Decompose before specifying when a single requirement bundles several independently testable capabilities:
+All Technical Specs must be saved in:
+`docs/architecture/specs/TECH-###-<slug>.md`  
+*(e.g., `docs/architecture/specs/TECH-001-core-socratic-engine.md`)*
 
-- The requirement names distinct capabilities with their own consumers or data (e.g. identity, billing, notifications, reporting)
-- Acceptance criteria cluster into groups that could ship and be verified separately
-- One capability could be cut or replaced without rewriting the others' requirements
+---
 
-**Propose a capability map before writing any spec.** Small and reviewable — a module table plus a build order, not a project plan:
+## Standard Technical Spec Template (`TECH-###`)
 
 ```markdown
-# Capability Map: [Initiative Name]
+---
+id: TECH-###
+title: "Technical Spec: [Feature / System Name]"
+type: tech-spec
+status: proposed # proposed | accepted | implemented
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+upstream:
+  - "docs/project-plan/specs/PRD-###-<slug>.md"
+  - "docs/architecture/adrs/ADR-###-<slug>.md"
+  - "docs/open-api/OAS-###-<slug>.yaml"
+downstream:
+  - "docs/project-plan/tasks/TASK-###-<slug>.md"
+tags:
+  - tech-spec
+  - implementation-plan
+---
 
-| Module id | Responsibility | Depends on |
-|---|---|---|
-| identity | Accounts, sessions, SSO | — |
-| billing | Plans, invoices, payments | identity |
-| notifications | Email and webhook fan-out | identity |
-| reporting | Usage dashboards | billing, notifications |
+# TECH-###: Technical Spec & Implementation Plan — [Feature Name]
 
-Build order: identity → billing, notifications → reporting
+## 0. Artifact Lineage & Traceability
+- **Upstream PRD:** [\`PRD-###-<slug>.md\`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/)
+- **Upstream ADRs:** [\`ADR-###-<slug>.md\`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/)
+- **Upstream OpenAPI Contract:** [\`OAS-###-<slug>.yaml\`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/)
+- **Target Downstream Tasks:** [\`TASK-###-<slug>.md\`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/)
+
+---
+
+## 1. Technical Stack & Dependencies
+- **Runtime & Language:** Node.js 20+ (TypeScript 5.x) / Python 3.11+
+- **Frameworks:** Fastify, Zod, SymPy, Prisma / Kysely
+- **Infrastructure Services:** PostgreSQL 16 (Docker), Redis 7 (Docker)
+
+---
+
+## 2. Executable Commands
+\`\`\`bash
+# Build
+npm run build
+
+# Test
+npm test
+npm run test:evals
+
+# Lint & Format
+npm run lint
+npm run format
+
+# Dev Server
+npm run dev
+\`\`\`
+
+---
+
+## 3. Directory Layout & Module Structure
+\`\`\`text
+src/
+├── api/             # Fastify routes, plugins, controllers
+│   ├── routes/      # Endpoints mapped to OAS-###
+│   └── sse/         # SSE streaming handlers
+├── domain/          # Pure business logic and invariants
+│   ├── socratic/    # Hint generators, pedagogical prompts
+│   └── sympy/       # CAS validation solver wrapper
+├── infra/           # Database, Redis client, external APIs
+└── types/           # Generated and shared TypeScript types
+tests/
+├── unit/            # Isolated unit tests
+├── integration/     # Fastify route and DB integration tests
+└── evals/           # Pedagogical and answer leakage evaluations
+\`\`\`
+
+---
+
+## 4. Code Style & Reference Pattern
+One real code snippet demonstrating standard error handling, typing, and validation:
+
+\`\`\`typescript
+import { z } from "zod";
+import { FastifyReply, FastifyRequest } from "fastify";
+
+export async function handleSocraticTurn(req: FastifyRequest, reply: FastifyReply) {
+  // Validate against Zod schema mapped from OAS contract
+  const body = turnRequestSchema.parse(req.body);
+
+  // Ground truth check before streaming
+  const truth = await sympySolver.solve(body.equation);
+  if (!truth.solvable) {
+    return reply.status(422).send({ error: "Equation cannot be verified symbolically." });
+  }
+
+  // Stream hints via SSE
+  reply.raw.setHeader("Content-Type", "text/event-stream");
+  for await (const chunk of hintGenerator.stream(body, truth)) {
+    reply.raw.write(\`data: \${JSON.stringify(chunk)}\\n\\n\`);
+  }
+}
+\`\`\`
+
+---
+
+## 5. Testing Strategy & Execution Boundaries
+
+### Testing Pyramid
+- **Unit Tests:** Fast, isolated tests for SymPy wrappers and leakage filters ($\ge 90\%$ coverage).
+- **Integration Tests:** Fastify endpoint integration against test PostgreSQL and Redis instances.
+- **Eval Benchmarks:** Red-team leakage benchmark ($\le 0.5\%$ leakage).
+
+### Boundaries
+- **Always:** Run test suites before PR; validate inputs with Zod; check SymPy truth before generating hints.
+- **Ask First:** Adding third-party dependencies; altering database migrations; changing CI config.
+- **Never:** Commit plaintext API keys; output direct solutions without parent unlock; use \`eval\`/\`exec\` on dynamic code.
+
+---
+
+## 6. Phased Implementation Plan (Milestone To-Dos)
+
+### Milestone 1: Local Infrastructure & DB Setup
+- [ ] 1.1 Docker Compose for PostgreSQL 16 and Redis 7
+- [ ] 1.2 Prisma/Kysely database migration for sessions and messages
+- [ ] 1.3 Fastify server initialization with health check endpoint
+
+### Milestone 2: SymPy Symbolic Verification Service
+- [ ] 2.1 Python SymPy execution wrapper with timeout and memory sandbox
+- [ ] 2.2 TypeScript bridge service calling SymPy solver
+- [ ] 2.3 Solvability and root extraction test suite
+
+### Milestone 3: Socratic Dialogue & SSE Hint Streaming
+- [ ] 3.1 Socratic prompt engine with answer leakage guardrails
+- [ ] 3.2 Fastify SSE streaming endpoint matching OAS contract
+- [ ] 3.3 Leakage eval benchmark suite
+
+### Milestone 4: Parent Authorization Gate & Session Summary
+- [ ] 4.1 Parent answer unlock toggle endpoint
+- [ ] 4.2 End-of-session comprehension check question generator
+- [ ] 4.3 Cloudflare Tunnel configuration for mobile testing
+
+---
+
+## 7. Downstream Task Mapping
+
+The milestones above decompose into numbered task files authored by \`planning-and-task-breakdown\`:
+- Milestone 1 $\to$ \`docs/project-plan/tasks/TASK-001-infra-db.md\`
+- Milestone 2 $\to$ \`docs/project-plan/tasks/TASK-002-sympy-solver.md\`
+- Milestone 3 $\to$ \`docs/project-plan/tasks/TASK-003-socratic-stream.md\`
+- Milestone 4 $\to$ \`docs/project-plan/tasks/TASK-004-parent-gate.md\`
 ```
 
-- **Stable module ids.** Kebab-case, chosen once, never renamed mid-initiative. Specs, plans, and downstream commands select work by these ids instead of guessing which spec is active.
-- **Dependency direction, no cycles.** Arrows point one way. If two modules each need the other, they are one module.
-- **Interfaces live at the boundary.** The map records that `billing` depends on `identity`; the contract between them belongs in the provider module's spec (see `api-and-interface-design` for designing it).
+---
 
-**The map is gated like every phase.** The human reviews module boundaries, dependency direction, and build order before any module spec is written. Getting the map wrong is expensive; reviewing ten lines is not.
+## Execution Checklist
 
-**Then recurse per module.** Run Specify → Plan → Tasks → Implement for each module in dependency order. Each module gets its own spec, scoped to that module's objective, boundaries, and success criteria. Save the approved map at the project root and each module's spec alongside it, named by module id (`SPEC-identity.md`, `SPEC-billing.md`) — the map, not filename guessing, is the index of what exists.
-
-### Phase 1: Specify
-
-Start with a high-level vision. Ask the human clarifying questions until requirements are concrete.
-
-**Surface assumptions immediately.** Before writing any spec content, list what you're assuming:
-
-```
-ASSUMPTIONS I'M MAKING:
-1. This is a web application (not native mobile)
-2. Authentication uses session-based cookies (not JWT)
-3. The database is PostgreSQL (based on existing Prisma schema)
-4. We're targeting modern browsers only (no IE11)
-→ Correct me now or I'll proceed with these.
-```
-
-Don't silently fill in ambiguous requirements. The spec's entire purpose is to surface misunderstandings *before* code gets written — assumptions are the most dangerous form of misunderstanding.
-
-**Write a spec document covering these six core areas:**
-
-1. **Objective** — What are we building and why? Who is the user? What does success look like?
-
-2. **Commands** — Full executable commands with flags, not just tool names.
-   ```
-   Build: npm run build
-   Test: npm test -- --coverage
-   Lint: npm run lint --fix
-   Dev: npm run dev
-   ```
-
-3. **Project Structure** — Where source code lives, where tests go, where docs belong.
-   ```
-   src/           → Application source code
-   src/components → React components
-   src/lib        → Shared utilities
-   tests/         → Unit and integration tests
-   e2e/           → End-to-end tests
-   docs/          → Documentation
-   ```
-
-4. **Code Style** — One real code snippet showing your style beats three paragraphs describing it. Include naming conventions, formatting rules, and examples of good output.
-
-5. **Testing Strategy** — What framework, where tests live, coverage expectations, which test levels for which concerns.
-
-6. **Boundaries** — Three-tier system:
-   - **Always do:** Run tests before commits, follow naming conventions, validate inputs
-   - **Ask first:** Database schema changes, adding dependencies, changing CI config
-   - **Never do:** Commit secrets, edit vendor directories, remove failing tests without approval
-
-**Spec template:**
-
-```markdown
-# Spec: [Project/Feature Name]
-
-## Objective
-[What we're building and why. User stories or acceptance criteria.]
-
-## Tech Stack
-[Framework, language, key dependencies with versions]
-
-## Commands
-[Build, test, lint, dev — full commands]
-
-## Project Structure
-[Directory layout with descriptions]
-
-## Code Style
-[Example snippet + key conventions]
-
-## Testing Strategy
-[Framework, test locations, coverage requirements, test levels]
-
-## Boundaries
-- Always: [...]
-- Ask first: [...]
-- Never: [...]
-
-## Success Criteria
-[How we'll know this is done — specific, testable conditions]
-
-## Open Questions
-[Anything unresolved that needs human input]
-```
-
-**External spec tools:** This workflow is format-agnostic. If the project
-already uses OpenSpec or another specification system, keep that system's
-artifact format and storage conventions instead of creating a duplicate
-`SPEC.md`. This skill owns the clarification, content, and approval gates; the
-external tool owns how the approved spec is represented.
-
-**Reframe instructions as success criteria.** When receiving vague requirements, translate them into concrete conditions:
-
-```
-REQUIREMENT: "Make the dashboard faster"
-
-REFRAMED SUCCESS CRITERIA:
-- Dashboard LCP < 2.5s on 4G connection
-- Initial data load completes in < 500ms
-- No layout shift during load (CLS < 0.1)
-→ Are these the right targets?
-```
-
-This lets you loop, retry, and problem-solve toward a clear goal rather than guessing what "faster" means.
-
-**Stop after writing the spec (CRITICAL).** Once the spec is saved:
-
-1. Summarize it and list any Open Questions.
-2. Ask the human to approve it or request changes.
-3. **STOP YOUR TURN IMMEDIATELY.** Do NOT start Phase 2, invoke `planning-and-task-breakdown`, or write code in this turn. Planning starts only after the human approves the spec in a later turn.
-
-### Phase 2: Plan
-
-With the validated spec, generate a technical implementation plan:
-
-1. Identify the major components and their dependencies
-2. Determine the implementation order (what must be built first)
-3. Note risks and mitigation strategies
-4. Identify what can be built in parallel vs. what must be sequential
-5. Define verification checkpoints between phases
-
-> Follow `planning-and-task-breakdown` for the dependency-graph mapping and vertical-slicing mechanics behind these steps; it is the canonical source. The bullets above are a lightweight summary; if they ever diverge, `planning-and-task-breakdown` takes precedence.
->
-> **Output convention:** Save the plan to `tasks/plan.md` and record the task list in the task list target defined by `planning-and-task-breakdown` (default `tasks/todo.md`; projects may designate an external tracker instead). Create `tasks/` if it does not exist. Downstream commands (`/build`, etc.) expect these defaults.
-
-The plan should be reviewable: the human should be able to read it and say "yes, that's the right approach" or "no, change X."
-
-### Phase 3: Tasks
-
-Break the plan into discrete, implementable tasks:
-
-- Each task should be completable in a single focused session
-- Each task has explicit acceptance criteria
-- Each task includes a verification step (test, build, manual check)
-- Tasks are ordered by dependency, not by perceived importance
-- No task should require changing more than ~5 files
-
-> Follow `planning-and-task-breakdown` for the full task-sizing and dependency-ordering mechanics; it is the canonical source. The template below is a lightweight inline form; if they ever diverge, `planning-and-task-breakdown` takes precedence.
-
-**Task template:**
-```markdown
-- [ ] Task: [Description]
-  - Acceptance: [What must be true when done]
-  - Verify: [How to confirm — test command, build, manual check]
-  - Files: [Which files will be touched]
-```
-
-### Phase 4: Implement
-
-Execute tasks one at a time following `skills/incremental-implementation/SKILL.md` (`incremental-implementation`) and `skills/test-driven-development/SKILL.md` (`test-driven-development`). Use `skills/context-engineering/SKILL.md` (`context-engineering`) to load the right spec sections and source files at each step rather than flooding the agent with the entire spec.
-
-## Keeping the Spec Alive
-
-The spec is a living document, not a one-time artifact:
-
-- **Update when decisions change** — If you discover the data model needs to change, update the spec first, then implement.
-- **Update when scope changes** — Features added or cut should be reflected in the spec.
-- **Commit the spec** — The spec belongs in version control alongside the code.
-- **Reference the spec in PRs** — Link back to the spec section that each PR implements.
-
-## Common Rationalizations
-
-| Rationalization | Reality |
-|---|---|
-| "This is simple, I don't need a spec" | Simple tasks don't need *long* specs, but they still need acceptance criteria. A two-line spec is fine. |
-| "I'll write the spec after I code it" | That's documentation, not specification. The spec's value is in forcing clarity *before* code. |
-| "The spec will slow us down" | A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours. |
-| "Requirements will change anyway" | That's why the spec is a living document. An outdated spec is still better than no spec. |
-| "The user knows what they want" | Even clear requests have implicit assumptions. The spec surfaces those assumptions. |
-| "It's one big feature; splitting it is overhead" | If acceptance criteria cluster into independently testable groups, a monolithic spec forces every downstream task to reason over the whole contract. A ten-line capability map is the cheap alternative. |
-| "I'll decompose during planning" | Planning slices tasks within a spec. By then the oversized artifact already exists — module boundaries and dependency direction must be decided before the spec is written, not after. |
-
-## Red Flags
-
-- Starting to write code without any written requirements
-- Asking "should I just start building?" before clarifying what "done" means
-- Implementing features not mentioned in any spec or task list
-- Making architectural decisions without documenting them
-- Skipping the spec because "it's obvious what to build"
-- Writing the spec and starting the plan or code in the same turn
-- One spec whose requirements span several independently testable capabilities
-- Module boundaries or build order decided implicitly during implementation because no capability map was approved up front
-
-## Verification
-
-Before proceeding to implementation, confirm:
-
-- [ ] The spec covers all six core areas
-- [ ] The human has reviewed and approved the spec
-- [ ] The turn ended after saving the spec; approval came in a later turn
-- [ ] Success criteria are specific and testable
-- [ ] Boundaries (Always/Ask First/Never) are defined
-- [ ] The spec is saved to a file in the repository
-- [ ] If the request bundles several independently testable capabilities, a capability map (module ids, dependency direction, build order) was approved before any module spec was written
-- [ ] Every module spec traces to a module id in the approved map
+Before advancing from Gate 2.5 to Gate 3 (Task Breakdown):
+- [ ] Upstream `PRD-###`, `ADR-###`, and `OAS-###` are accepted.
+- [ ] Executable commands are verified to run without interactive prompts.
+- [ ] Directory layout and code style patterns are established.
+- [ ] The Phased Implementation Plan has clear milestone to-dos.
+- [ ] Registered in [`docs/INDEX.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/INDEX.md).

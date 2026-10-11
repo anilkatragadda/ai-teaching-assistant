@@ -17,8 +17,8 @@ Every non-trivial feature or architectural change proceeds through these sequent
 Gate 0: INTENT REVIEW & TECHNICAL EXPLORATION (intent-reviewer + architecture-explorer)
        │  Context seeding, deep domain research, curated options, scope boundary definition
        ▼
-Gate 1: REQUIREMENTS & SPEC (spec-driven-development)
-       │  Write PRD with user stories & acceptance criteria in docs/project-plan/
+Gate 1: REQUIREMENTS & SPEC (requirements-authoring)
+       │  Write PRD with user stories & acceptance criteria in docs/project-plan/specs/
        ▼
 Gate 1.5: UI/UX & DESIGN ARCHITECTURE (ui-ux-designer + ui-ux-studio)
        │  Screen flows, Google Stitch vibe prototyping, accessible design tokens in docs/architecture/ui/
@@ -26,11 +26,14 @@ Gate 1.5: UI/UX & DESIGN ARCHITECTURE (ui-ux-designer + ui-ux-studio)
 Gate 2: ARCHITECTURE & CONTRACTS (api-and-interface-design + documentation-and-adrs)
        │  Define OpenAPI specs in docs/open-api/ and ADRs in docs/architecture/
        ▼
+Gate 2.5: TECHNICAL SPEC & IMPLEMENTATION PLAN (spec-driven-development)
+       │  Technical scaffolding, commands, directory structure, and phased milestone to-dos in docs/architecture/specs/
+       ▼
 Gate 3: TASK BREAKDOWN (planning-and-task-breakdown)
-       │  Deconstruct into ordered, testable, independent units of work
+       │  Deconstruct milestones into atomic tasks with execution to-dos in docs/project-plan/tasks/
        ▼
 Gate 4: TEST-DRIVEN IMPLEMENTATION (test-engineer + test-driven-development)
-       │  Write failing tests first (red-green-refactor loop)
+       │  Execute task to-dos via red-green-refactor TDD loop
        ▼
 Gate 5: DUAL-AXIS AUDIT (security-auditor + code-reviewer)
        │  Scan OWASP/LLM vulnerabilities + 6-axis code quality review
@@ -49,10 +52,12 @@ The workspace tools and subagents in `.agents/` map directly to the SDLC stages:
 |---|---|---|
 | **Phase 0: Technical Exploration** | [`architecture-explorer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/architecture-explorer.md) | Seeds app context from `docs/`, researches complex technical domains (Auth, JWT, RAG, Sessions), and produces curated option matrices. |
 | **Phase 0: Intent Ingestion** | [`intent-reviewer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/intent-reviewer/agent.md) | Interrogates developer prompts, guides developers along recommended technical paths, and outputs the structured Intent Brief. |
-| **Phase 1: Requirements & Specs** | Primary Agent with [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) | Authors PRDs in `docs/project-plan/specs/` and decomposes into capability maps. |
+| **Phase 1: Requirements & Specs** | Primary Agent with [`requirements-authoring`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/requirements-authoring/SKILL.md) | Authors PRDs in `docs/project-plan/specs/` with user stories, acceptance criteria, and compliance bounds. |
 | **Phase 1.5: UI/UX & Design Architecture** | [`ui-ux-designer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/ui-ux-designer.md) with [`ui-ux-studio`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/ui-ux-studio/SKILL.md) | Translates `IB-###` into screen flows, accessible component systems, and Google Stitch prototypes in `docs/architecture/ui/`. |
 | **Phase 2: Architecture & Contracts** | Primary Agent with [`api-and-interface-design`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/api-and-interface-design/SKILL.md) & [`documentation-and-adrs`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/documentation-and-adrs/SKILL.md) | Authors typed OpenAPI contracts in `docs/open-api/` and ADRs in `docs/architecture/adrs/`. |
-| **Phase 4: QA & Test Harness** | [`test-engineer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/test-engineer.md) | Writes unit/integration tests and prompt eval benchmarks before application logic is written. |
+| **Phase 2.5: Technical Spec & Plan** | Primary Agent with [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) | Authors technical specs (`TECH-###`) with executable commands, scaffolding, code patterns, and phased milestone to-dos in `docs/architecture/specs/`. |
+| **Phase 3: Task Breakdown** | Primary Agent with [`planning-and-task-breakdown`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/planning-and-task-breakdown/SKILL.md) | Deconstructs implementation plan milestones into atomic tasks with execution to-dos in `docs/project-plan/tasks/`. |
+| **Phase 4: Test-Driven Implementation** | Primary Agent with [`test-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/test-driven-development/SKILL.md) & [`test-engineer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/test-engineer.md) | Executes task checklist to-dos using red-green-refactor TDD loop. |
 | **Phase 5: Security Audit** | [`security-auditor`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/security-auditor.md) | Validates input bounds, auth/authz, student data protection (FERPA/COPPA), and prompt safety. |
 | **Phase 5: Code Quality Review** | [`code-reviewer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/code-reviewer.md) | Conducts pre-merge review across correctness, readability, architecture, and clarity. |
 | **Phase 6: Prose & Docs Polish** | [`clarity`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/clarity/SKILL.md) | Ensures user-facing guides, API docs, and release notes are concrete and free of AI filler. |
@@ -65,18 +70,20 @@ The workspace tools and subagents in `.agents/` map directly to the SDLC stages:
 |---|---|---|
 | **Ideate & Refine Concept** | [`idea-refine`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/idea-refine/SKILL.md) | Expand and stress-test raw product ideas through structured divergence and convergence. |
 | **Intent Interview & Guidance** | [`interview-me`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/interview-me/SKILL.md) | Ask one targeted question at a time with opinionated recommendations attached. |
+| **Requirements & PRD Drafting** | [`requirements-authoring`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/requirements-authoring/SKILL.md) | Draft structured, traceable PRDs with user stories, acceptance criteria, and bounds before writing contracts or code. |
 | **UI/UX Discovery, Design & Polish** | [`ui-ux-studio`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/ui-ux-studio/SKILL.md) | Full-lifecycle UI discovery, design briefs, Google Stitch prototyping, WCAG AA, and platform adaptation. |
 | **Frontend Component Engineering** | [`frontend-ui-engineering`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/frontend-ui-engineering/SKILL.md) | Build production-grade, accessible components with composition, colocated tests, and clean state. |
 | **Verify Official Framework Patterns** | [`source-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/source-driven-development/SKILL.md) | Ground technical choices in authoritative framework documentation rather than stale memory. |
 | **Educational Prose & Spec Review** | [`clarity`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/clarity/SKILL.md) | Review student-facing prose, rubrics, and specs to eliminate generic AI filler. |
-| **Requirements & PRD Drafting** | [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) | Draft a specification with objectives and acceptance criteria before writing code. |
 | **API & Service Contracts** | [`api-and-interface-design`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/api-and-interface-design/SKILL.md) | Design stable, typed schemas in `docs/open-api/` following Hyrum's Law. |
-| **Task Planning & Breakdown** | [`planning-and-task-breakdown`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/planning-and-task-breakdown/SKILL.md) | Deconstruct milestones into sequenced, testable units of work. |
+| **Technical Spec & Plan** | [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) | Author technical specs (`TECH-###`) with scaffolding, commands, code patterns, and phased milestone implementation plans. |
+| **Task Planning & Breakdown** | [`planning-and-task-breakdown`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/planning-and-task-breakdown/SKILL.md) | Deconstruct implementation plan milestones into atomic, sequenced tasks with execution to-dos. |
 | **Logic Implementation & Bugfixes** | [`test-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/test-driven-development/SKILL.md) | Follow red-green-refactor; write failing tests to prove bugs before fixing. |
 | **Security & Privacy Hardening** | [`security-and-hardening`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/security-and-hardening/SKILL.md) | Audit input boundaries, sanitize student PII, and prevent prompt injection. |
 | **Pre-merge Review & Polish** | [`code-review-and-quality`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/code-review-and-quality/SKILL.md) | Review changes across correctness, readability, architecture, security, performance, and clarity. |
 | **Bug Diagnosis & Recovery** | [`debugging-and-error-recovery`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/debugging-and-error-recovery/SKILL.md) | Trace root causes methodically using reproduction steps and log analysis. |
 | **Architectural Decisions (ADRs)** | [`documentation-and-adrs`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/documentation-and-adrs/SKILL.md) | Record architectural choices in `docs/architecture/` with context, trade-offs, and consequences. |
+| **README & Project Front Door** | [`readme-authoring`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/readme-authoring/SKILL.md) | Author clean, concise, open-source-grade `README.md` files with GFM admonitions and zero fluff. |
 | **Prompt Tuning & Context** | [`context-engineering`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/context-engineering/SKILL.md) | Optimize agent and model prompt windows, tokens, and system instructions. |
 
 ---
@@ -94,9 +101,10 @@ Every artifact must follow this strict prefix, folder, and naming convention:
 | **`IB`** | **Intent Brief** | [`docs/project-plan/intents/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/) | `IB-###-<slug>.md` | [`intent-reviewer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/intent-reviewer/agent.md) |
 | **`ARN`** | **Architecture Research Note** | [`docs/architecture/research/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | `ARN-###-<slug>.md` | [`architecture-explorer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/architecture-explorer.md) |
 | **`UI`** | **UI/UX Design Spec** | [`docs/architecture/ui/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | `UI-###-<slug>.md` | [`ui-ux-designer`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/agents/ui-ux-designer.md) |
-| **`PRD`** | **Requirements & Spec** | [`docs/project-plan/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | `PRD-###-<slug>.md` | [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) |
+| **`PRD`** | **Requirements & Spec** | [`docs/project-plan/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | `PRD-###-<slug>.md` | [`requirements-authoring`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/requirements-authoring/SKILL.md) |
 | **`ADR`** | **Architecture Decision Record** | [`docs/architecture/adrs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | `ADR-###-<slug>.md` | [`documentation-and-adrs`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/documentation-and-adrs/SKILL.md) |
 | **`OAS`** | **OpenAPI Service Contract** | [`docs/open-api/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | `OAS-###-<slug>.yaml` | [`api-and-interface-design`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/api-and-interface-design/SKILL.md) |
+| **`TECH`** | **Technical Spec & Plan** | [`docs/architecture/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/specs/) | `TECH-###-<slug>.md` | [`spec-driven-development`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/spec-driven-development/SKILL.md) |
 | **`TASK`** | **Task Implementation Breakdown** | [`docs/project-plan/tasks/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/) | `TASK-###-<slug>.md` | [`planning-and-task-breakdown`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/planning-and-task-breakdown/SKILL.md) |
 | **`REL`** | **Release & Verification Report** | [`docs/releases/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/releases/) | `REL-###-<slug>.md` | [`clarity`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/.agents/skills/clarity/SKILL.md) |
 

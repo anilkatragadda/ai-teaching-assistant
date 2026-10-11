@@ -140,75 +140,72 @@ If a task is L or larger, it should be broken into smaller tasks. An agent perfo
 - It touches two or more independent subsystems (e.g., auth and billing)
 - You find yourself writing "and" in the task title (a sign it is two tasks)
 
-## Output Files
+## Output Convention in this Repository
 
-- **Plan document:** Save the implementation plan to `tasks/plan.md`. This is always a markdown file — design decisions, risks, and open questions don't map cleanly onto individual tracker issues.
-- **Task list:** Record each task in the **task list target** (defined below).
+In this repository, all task breakdowns are tracked as first-class SDLC artifacts:
+- **Location:** `docs/project-plan/tasks/TASK-###-<slug>.md` (e.g., `docs/project-plan/tasks/TASK-001-local-infra-and-db.md`).
+- **Input Source:** Decomposes the Phased Implementation Plan milestones from [`docs/architecture/specs/TECH-###-<slug>.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/specs/).
+- **Execution Units:** Each task contains granular execution to-dos executed via Test-Driven Development (TDD).
 
-Create the `tasks/` directory if it does not exist.
-
-**Never overwrite an incomplete plan.** Before writing `tasks/plan.md` or `tasks/todo.md`, check whether they already exist and still contain unchecked tasks:
-
-- Same work being replanned (the user asked to revise or extend this plan) → update the existing files in place.
-- Different work → **stop and ask.** The unchecked tasks may be mid-build in another session. Do not delete, overwrite, or rename the existing files on your own; present the conflict and let the user decide (finish the old plan first, explicitly discard it, or tell you where the new plan should go).
-
-The same rule applies to an external task list target: never bulk-close or delete another plan's open tracker items to make room for new ones.
-
-### Task List Target
-
-The task list target is where tasks and checkpoints are recorded. It is defined once, here; every other reference in this skill defers to it.
-
-- **Default: a checklist-style markdown file at `tasks/todo.md`.** This is the convention the `/build` command and other downstream tooling expect. Use it unless the project says otherwise.
-- **External tracker:** if the project's agent rules (`CLAUDE.md`, `AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), create one tracker item per task instead of writing `tasks/todo.md`. Map the Step 4 structure onto the tracker's fields: acceptance criteria and verification steps in the item body, dependencies via the tracker's linking mechanism (`bd dep add`, "blocked by", etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.
-
-When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked in Linear project FOO") so downstream steps and future sessions know where to look, and keep the plan document's Task List section as an ordered index of tracker item IDs or links rather than a duplicate checklist.
-
-## Plan Document Template
+## Task Artifact Template (`TASK-###`)
 
 ```markdown
-# Implementation Plan: [Feature/Project Name]
+---
+id: TASK-###
+title: "Task Breakdown: [Milestone / Feature Name]"
+type: task-breakdown
+status: proposed # proposed | accepted | in-progress | completed
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+upstream:
+  - "docs/architecture/specs/TECH-###-<slug>.md"
+downstream: []
+tags:
+  - tasks
+  - tdd
+---
 
-## Overview
-[One paragraph summary of what we're building]
+# TASK-###: Task Breakdown — [Milestone / Feature Name]
 
-## Architecture Decisions
-- [Key decision 1 and rationale]
-- [Key decision 2 and rationale]
+## 0. Artifact Lineage & Traceability
+- **Upstream Tech Spec & Plan:** [`TECH-###-<slug>.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/specs/)
+- **Upstream PRD:** [`PRD-###-<slug>.md`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/)
 
-## Task List
+---
 
-### Phase 1: Foundation
-- [ ] Task 1: ...
-- [ ] Task 2: ...
+## 1. Task Summary
+- **Objective:** [One concise paragraph explaining what this task implements]
+- **Target Files:**
+  - `src/...`
+  - `tests/...`
 
-### Checkpoint: Foundation
-- [ ] Tests pass, builds clean
+---
 
-### Phase 2: Core Features
-- [ ] Task 3: ...
-- [ ] Task 4: ...
+## 2. Execution To-Do Checklist
 
-### Checkpoint: Core Features
-- [ ] End-to-end flow works
+### Task 1: [Component / Function Name]
+- **Files:** `src/domain/...`, `tests/unit/...`
+- **Acceptance Criteria:** [Specific, testable behavior]
+- **Execution To-Dos:**
+  - [ ] 1.1 (Red): Write failing unit test proving required behavior
+  - [ ] 1.2 (Green): Implement minimal code to pass test
+  - [ ] 1.3 (Refactor): Clean up, enforce typing, run linter
 
-### Phase 3: Polish
-- [ ] Task 5: ...
-- [ ] Task 6: ...
+### Task 2: [Endpoint / Integration Flow]
+- **Files:** `src/api/...`, `tests/integration/...`
+- **Acceptance Criteria:** [Status codes, response schema matching OAS contract]
+- **Execution To-Dos:**
+  - [ ] 2.1 (Red): Write failing integration test against route
+  - [ ] 2.2 (Green): Implement Fastify handler & connect domain logic
+  - [ ] 2.3 (Refactor): Verify end-to-end test run and schema validation
 
-### Checkpoint: Complete
-- [ ] All acceptance criteria met
-- [ ] Ready for review
+---
 
-## Risks and Mitigations
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| [Risk] | [High/Med/Low] | [Strategy] |
-
-## Open Questions
-- [Question needing human input]
+## 3. Verification & Completion Gate
+- [ ] All unit and integration tests pass cleanly (`npm test`)
+- [ ] No lint or type errors (`npm run lint`)
+- [ ] Code reviewer dual-axis audit passed (Gate 5)
 ```
-
-When tasks live in an external tracker, keep the Task List section above as an ordered index of tracker item IDs or links instead of a duplicate checklist.
 
 ## Parallelization Opportunities
 

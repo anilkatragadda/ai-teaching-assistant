@@ -14,12 +14,13 @@ Every artifact follows a strict ID namespace and file naming format:
 
 | Prefix | Artifact Type | Standard Directory | Naming Pattern | Downstream Consumer / Agent |
 |---|---|---|---|---|
-| **`IB`** | **Intent Brief** | [`docs/project-plan/intents/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/) | `IB-###-<slug>.md` | `architecture-explorer`, `ui-ux-designer`, `spec-driven-development` |
+| **`IB`** | **Intent Brief** | [`docs/project-plan/intents/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/) | `IB-###-<slug>.md` | `architecture-explorer`, `ui-ux-designer`, `requirements-authoring` |
 | **`ARN`** | **Architecture Research Note** | [`docs/architecture/research/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/) | `ARN-###-<slug>.md` | `intent-reviewer`, `documentation-and-adrs` |
-| **`UI`** | **UI/UX Design Spec** | [`docs/architecture/ui/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | `UI-###-<slug>.md` | `ui-ux-designer`, `ui-ux-studio`, `spec-driven-development` |
+| **`UI`** | **UI/UX Design Spec** | [`docs/architecture/ui/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/ui/) | `UI-###-<slug>.md` | `ui-ux-designer`, `ui-ux-studio` |
 | **`PRD`** | **Requirements & Spec** | [`docs/project-plan/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/specs/) | `PRD-###-<slug>.md` | `api-and-interface-design`, `planning-and-task-breakdown` |
 | **`ADR`** | **Architecture Decision Record** | [`docs/architecture/adrs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/) | `ADR-###-<slug>.md` | All engineering agents |
 | **`OAS`** | **OpenAPI Service Contract** | [`docs/open-api/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/open-api/) | `OAS-###-<slug>.yaml` | Backend engineers, frontend callers, `test-engineer` |
+| **`TECH`** | **Technical Spec & Plan** | [`docs/architecture/specs/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/specs/) | `TECH-###-<slug>.md` | `spec-driven-development`, `planning-and-task-breakdown` |
 | **`TASK`** | **Task Implementation Breakdown** | [`docs/project-plan/tasks/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/tasks/) | `TASK-###-<slug>.md` | Implementation agents (`test-engineer`, coder) |
 | **`REL`** | **Release & Verification Report** | [`docs/releases/`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/releases/) | `REL-###-<slug>.md` | Release gatekeeper, `clarity` |
 
@@ -66,9 +67,9 @@ Immediately beneath the H1 title of every document, include clickable GitHub-sty
 
 When a new artifact is created or advances through the gates, update this central table:
 
-| Intent (`IB`) | Research Note (`ARN`) | UI Design (`UI`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Task Plan (`TASK`) | Status |
-|---|---|---|---|---|---|---|---|
-| — | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/ARN-001-competitive-differentiation-and-moat.md) | — | — | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-001-core-tech-stack-and-video-rendering.md)<br>[`ADR-002`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-002-progressive-deployment-plan.md) | — | — | Accepted |
+| Intent (`IB`) | Research Note (`ARN`) | UI Design (`UI`) | Spec / PRD (`PRD`) | ADR (`ADR`) | OpenAPI Contract (`OAS`) | Tech Spec (`TECH`) | Task Plan (`TASK`) | Status |
+|---|---|---|---|---|---|---|---|---|
+| [`IB-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/project-plan/intents/IB-001-core-socratic-tutor.md) | [`ARN-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/research/ARN-001-competitive-differentiation-and-moat.md) | — | — | [`ADR-001`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-001-core-tech-stack-and-video-rendering.md)<br>[`ADR-002`](file:///Users/anilkatragadda/Documents/code/ai-teaching-assistant/docs/architecture/adrs/ADR-002-progressive-deployment-plan.md) | — | — | — | Accepted |
 
 
 
